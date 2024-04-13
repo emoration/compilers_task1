@@ -1,0 +1,46 @@
+COMMAND #include<stdio.h>
+COMMAND #include<string.h>
+COMMENT /*Make the values from this position in the a array equal to all the values moved n bits back to play the role of removal*/
+COMMENT // ------------------Example of the true code------------------------------------------------------
+COMMENT //The nested loop determines if any consecutive strings are equal to s2
+COMMENT //The outermost loop prevents the remaining string from forming a new cat after the cat is removed
+IDENTIFIER a
+IDENTIFIER b
+IDENTIFIER d
+IDENTIFIER e
+IDENTIFIER gets
+IDENTIFIER i
+IDENTIFIER j
+IDENTIFIER k
+IDENTIFIER m
+IDENTIFIER main
+IDENTIFIER n
+IDENTIFIER printf
+IDENTIFIER strlen
+INT_DEC 0
+INT_DEC 1
+INT_DEC 100
+KEYWORD break
+KEYWORD char
+KEYWORD do
+KEYWORD for
+KEYWORD if
+KEYWORD int
+KEYWORD return
+KEYWORD while
+OPERATOR !=
+OPERATOR (
+OPERATOR )
+OPERATOR +
+OPERATOR ++
+OPERATOR ,
+OPERATOR -
+OPERATOR ;
+OPERATOR <
+OPERATOR =
+OPERATOR ==
+OPERATOR [
+OPERATOR ]
+OPERATOR {
+OPERATOR }
+STRING "%c"

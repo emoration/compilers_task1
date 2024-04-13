@@ -1,0 +1,34 @@
+// ------------------Example of the true code------------------------------------------------------
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char a[100],b[100];
+    gets(a);
+    gets(b);
+    int m=strlen(a);
+    int n=strlen(b);
+    int i,j,k,d=0,e=0;
+    do{  //The outermost loop prevents the remaining string from forming a new cat after the cat is removed
+        d=0;
+        for(i=0;i<m;i++){  //The nested loop determines if any consecutive strings are equal to s2
+            k=0;
+            for(j=i;j<i+n;j++){
+                if(b[k]!=a[j])
+                    break;
+                k++;
+            }
+            if(k==n){  /*Make the values from this position in the a array equal to all the values moved n bits back to play the role of removal*/
+                m=m-n;
+                for(j=i;j<m;j++){
+                    a[j]=a[j+n];
+                }
+                i=i-1;
+                d=1;
+            }
+        }
+    }while(d!=0);
+    for(i=0;i<m;i++){
+        printf("%c",a[i]);
+    }
+    return 0;
+}

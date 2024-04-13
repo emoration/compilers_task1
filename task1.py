@@ -499,7 +499,13 @@ def show_token_list(token_list):
 
 # 主流程
 if __name__ == '__main__':
-    sample_list = ['sample1', 'sample2']
+    # 在./data/目录下搜索以.in结尾的文件
+    sample_list = []
+    import os
+    for root, dirs, files in os.walk('./data/'):
+        for file in files:
+            if file.endswith('.in'):
+                sample_list.append(os.path.join(root, file)[:-3])
     for sample_name in sample_list:
         # 读取代码
         with open(f'{sample_name}.in', 'r', encoding='utf-8') as f:
