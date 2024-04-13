@@ -1,0 +1,94 @@
+<comment, // ------------------Example of the corresponding type------------------------------------------------------>
+<comment, // command(right)>
+<command, #>
+<command, # asdaadgagasdf>
+<command, #include <stdio.h>>
+<command, #include <stdio.h>>
+<comment, // command(error)>
+<identifier, asd>
+<error, #include <string.h>, command必须在行首>
+<comment, // string(right)>
+<string, "asdafvsdvfbbdfvbdf\"\"SD\"\'''''''''asdac\c\,\.\l\;\#">
+<comment, // string(error)>
+<error, "asdasda\", 双引号不成对>
+<comment, // char(right)>
+<char, '1'>
+<char, '\''>
+<comment, // char(error)>
+<error, '\', 单引号不成对>
+<comment, // identifier|keyword(right)>
+<identifier, var>
+<identifier, a>
+<identifier, b>
+<identifier, c>
+<keyword, if>
+<keyword, else>
+<comment, // identifier|keyword(error)>
+<error, 0a, 数字开头的标识符>
+<error, 5651das, 数字开头的标识符>
+<comment, // int(right)>
+<int_dec, 0>
+<int_dec, 1>
+<int_dec, 100>
+<int_oct, 007>
+<int_hex, 0x0fF>
+<int_bin, 0B010>
+<comment, // int(error)>
+<error, 0x, 缺少数值的十六进制数>
+<error, 0B, 缺少数值的二进制数>
+<error, 0Xffg, 错误的十六进制数>
+<error, 0b012, 错误的二进制数>
+<error, 0x0x, 错误的十六进制数>
+<error, 0089, 错误的八进制数>
+<comment, // float(right)>
+<float, 0.0>
+<float, 1.>
+<float, .1>
+<float, 0.1e+1>
+<float, 1.e-1>
+<float, .1e1>
+<comment, // float(error)>
+<error, 1.1.1, 带有非法字符的小数>
+<error, 1.e, 科学计数法缺少指数>
+<float, .1>
+<error, 1ee, 带有非法字符的小数>
+<error, 1e, 科学计数法缺少指数>
+<error, 1e+, 科学计数法缺少指数值>
+<comment, // operator(right)>
+<operator, +>
+<operator, ->
+<operator, *>
+<operator, />
+<operator, %>
+<operator, ++>
+<operator, -->
+<operator, ==>
+<operator, !=>
+<operator, >=>
+<operator, <=>
+<operator, !>
+<operator, &&>
+<operator, ||>
+<operator, <<>
+<operator, >>>
+<operator, =>
+<operator, +=>
+<operator, -=>
+<operator, *=>
+<operator, />
+<operator, =>
+<operator, %=>
+<operator, &=>
+<operator, |=>
+<operator, ^=>
+<operator, <<=>
+<operator, >>=>
+<operator, |>
+<operator, ^>
+<operator, ~>
+<comment, // operator(no error)>
+<comment, // comment(right)>
+<comment, // asdasd>
+<comment, /*asdasd*/>
+<comment, // comment(error)>
+<error, /*asdasd*asdasd, 未成对的/*>

@@ -1,0 +1,53 @@
+
+// ------------------Example of the corresponding type------------------------------------------------------
+
+// command(right)
+#
+# asdaadgagasdf
+#include <stdio.h>
+          #include <stdio.h>
+
+// command(error)
+asd #include <string.h>
+
+// string(right)
+"asdafvsdvfbbdfvbdf\"\"SD\"\'''''''''asdac\c\,\.\l\;\#"
+
+// string(error)
+"asdasda\"
+
+// char(right)
+'1''\''
+
+// char(error)
+'\'
+
+// identifier|keyword(right)
+var a b c if else
+
+// identifier|keyword(error)
+0a 5651das
+
+// int(right)
+0 1 100 007 0x0fF 0B010
+
+// int(error)
+0x 0B 0Xffg 0b012 0x0x 0089
+
+// float(right)
+0.0 1. .1 0.1e+1 1.e-1 .1e1
+
+// float(error)
+1.1.1 1.e.1 1ee 1e 1e+
+
+// operator(right)
++ - * / % ++ -- == != >= <= ! && || << >> = += -= *= /= %= &= |= ^= <<= >>= | ^ ~
+
+// operator(no error)
+
+// comment(right)
+// asdasd
+/*asdasd*/
+
+// comment(error)
+/*asdasd*asdasd
