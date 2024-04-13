@@ -1,4 +1,5 @@
 # 词法分析器
+
 # 设计过程
 #     1.列出要识别的类
 #     2.定义正则表达式
@@ -16,11 +17,14 @@
 #       大部分DFA使用DFA类自动匹配（每个循环记录当前的状态，根据下一个字符来切换状态，没有对应边时匹配终止，正确类型和错误类型全部记录在终态中）
 #     6.执行词法分析并输出结果
 
+from __future__ import annotations  # 为兼容低版本python（不支持函数类别定义），导入__future__模块
+
 from colorama import Fore, Style  # 导入可视化相关的库(用于改变输出字体的颜色)
 
 
 # 定义Token类
 class Token:
+    """定义Token类：包含三个信息，词法的类型，词法类型对应的颜色，词法错误的提示"""
     type_to_name = {
         'whitespace': '空白符',
         'command': '预处理命令',
@@ -70,7 +74,8 @@ class Token:
 
 # 定义字符集(借鉴正则表达式的字符集)
 class SignSet:
-    # 借鉴正则表达式，将字符集分类如下
+    """定义SignSet字符集：借鉴正则表达式的字符集表示方法，定义了\s\w\d等字符集"""
+
     # \d类
     sign_set_d = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
     # \w类
@@ -101,7 +106,7 @@ class SignSet:
 
 
 # 定义循环匹配函数（适用于DFA无法解决的情况(比如需要判断是否行首)
-def loop_match(_j, sign_set, _code):
+def loop_match(_j, sign_set, _code) -> int:
     """循环匹配字符串，让j停在最后一个匹配的字符上，或者遇到整个字符串结尾"""
     while _j < len(_code) and _code[_j] in sign_set:
         _j += 1
@@ -111,10 +116,10 @@ def loop_match(_j, sign_set, _code):
 
 # 定义DFA类，以及内部的符号集解析函数、自动匹配函数
 class DFA:
-    """确定有限自动机类"""
+    """DFA确定有限自动机类"""
 
-    def __init__(self, *, edges: list[tuple[int, str | set[str], int]], start: int, end: dict[int, str]):
-        """通过边和起止节点来构造DFA函数"""
+    def __init__(self, *, edges: list, start: int, end: dict):
+        """输入 边(起点, 转移条件, 终点)、初态(状态编号)和终态(状态编号, 类型信息)，转为内部的数据结构(邻接表)"""
         assert isinstance(edges, list)
         for i in range(len(edges)):
             edge = edges[i]
@@ -142,7 +147,7 @@ class DFA:
 
     # 解析单元素正则表达式(即解析字符集)
     @staticmethod
-    def parse_single_regexp(s: str) -> set[str]:
+    def parse_single_regexp(s: str) -> set:
         """解析单元素正则表达式，返回字符集"""
         if s[0] == '[' and s[-1] == ']':
             s = s[1:-1]
@@ -172,6 +177,12 @@ class DFA:
                 if s[j] == 'W':
                     sign_set += SignSet.sign_set_W
                     continue
+                if s[j] == 'n':
+                    sign_set.append('\n')
+                    continue
+                if s[j] == 't':
+                    sign_set.append('\t')
+                    continue
                 if s[j] in SignSet.sign_set_W - SignSet.sign_set_s:
                     sign_set.append(s[j])
                     continue
@@ -197,7 +208,7 @@ class DFA:
 
     # 自动匹配函数
     def match(self, _code: str, _i: int, _j: int) -> (Token, int):
-        """匹配字符串，返回token和最后一个匹配的字符的下标"""
+        """匹配字符串，返回Token实例和最后一个匹配的字符的下标"""
         state = self.start
         # _j表示需要判断的字符的下标
         while _j < len(_code) and state in self.graph:  # 没有后节点就停止（表示进入下一个token识别）
@@ -218,7 +229,8 @@ class DFA:
 
 
 # 定义词法分析函数
-def parse(code: str) -> list[Token]:
+def parse(code: str) -> list:
+    """定义词法分析函数parse()：在该函数内进行词法分析，先根据词素的大类进行分支语句，然后实例化对应类别的DFA，然后用DFA类内部的匹配函数匹配(或直接用循环匹配函数匹配)"""
     token_list = []
     # i为token的起始位置, j为token的结束位置（token=code[i:j+1]）
     line_head = True  # 用于判断是否是行首（不考虑空白符）
@@ -249,7 +261,7 @@ def parse(code: str) -> list[Token]:
             fa = DFA(
                 edges=[
                     (1, r'[^\"\\\n]', 1),
-                    (1, r'"', 2),
+                    (1, r'\"', 2),
                     (1, r"\\", 3),
                     (3, r".", 1),
                 ],
@@ -272,7 +284,7 @@ def parse(code: str) -> list[Token]:
                     (1, r"[^\'\\\n]", 2),
                     (1, r"\\", 3),
                     (3, r".", 2),
-                    (2, "'", 4),
+                    (2, r"\'", 4),
                 ],
                 start=1,
                 end={
@@ -317,6 +329,7 @@ def parse(code: str) -> list[Token]:
                     (1, r'[bB]', 6),
                     (1, r'[xX]', 9),
                     (1, r'[ac-wyzAC-WYZ_]', 12),
+                    (1, r'\.', 13),
                     (2, r'\d', 2),
                     (2, r'[a-df-zA-DF-Z_]', 12),
                     (2, r'[eE]', 14),
@@ -337,7 +350,7 @@ def parse(code: str) -> list[Token]:
                     (12, r'\w', 12),
                     (13, r'\d', 13),
                     (13, r'[eE]', 14),
-                    (13, r'[a-df-zA-DF-Z_]', 17),
+                    (13, r'[a-df-zA-DF-Z_\.]', 17),
                     (14, r'[a-zA-Z_]', 17),
                     (14, r'[\+\-]', 15),
                     (14, r'\d', 16),
@@ -450,13 +463,30 @@ def parse(code: str) -> list[Token]:
 
 
 # 定义符号表输出函数
-def print_token_list(token_list):
+def print_token_list(token_list, path=None):
+    """根据对应词素类别来输出，内部隐式使用Token的__str__()函数，可以将whitespace类型转为空字符串(不输出)，error类型可以输出错误信息"""
     for i in token_list:
         print(i, end='')
+    # 输出到文件
+    if path:
+        with open(f"{path}.out", 'w', encoding='utf-8') as f:
+            for i in token_list:
+                f.write(str(i))
+        with open(f"{path}.sym", 'w', encoding='utf-8') as f:
+            # token_list去重
+            token_list = set(list([(token.type, token.value, token.hint) for token in token_list]))
+            # 去除空白符类
+            token_list = [i for i in token_list if i[0] != 'whitespace']
+            # 排序
+            token_list.sort()
+            # 输出符号表
+            for i in token_list:
+                f.write(f"{i[0].upper()}{'@' + i[2] if i[2] != '' else ''} {i[1]}\n")
 
 
 # 定义可视化函数
 def show_token_list(token_list):
+    """根据词素类别来可视化，将不同类别输出为不同颜色的文本"""
     # 类型颜色对照表输出
     for _type in Token.type_to_name:
         print(Token.type_to_color[_type] + Token.type_to_name[_type] + Style.RESET_ALL, end=' ')
@@ -469,13 +499,15 @@ def show_token_list(token_list):
 
 # 主流程
 if __name__ == '__main__':
-    # 读取代码
-    with open('code.txt', 'r', encoding='utf-8') as f:
-        code = f.read()
-    # 词法分析(函数循环匹配/DFA自动匹配)
-    tokens = parse(code)
-    # 输出符号表
-    print_token_list(tokens)
-    print()
-    # 输出颜色渲染后的代码
-    show_token_list(tokens)
+    sample_list = ['sample1', 'sample2']
+    for sample_name in sample_list:
+        # 读取代码
+        with open(f'{sample_name}.in', 'r', encoding='utf-8') as f:
+            code = f.read()
+        # 词法分析(函数循环匹配/DFA自动匹配)
+        tokens = parse(code)
+        # 输出符号表
+        print_token_list(tokens, sample_name)
+        print()
+        # 输出颜色渲染后的代码
+        show_token_list(tokens)
