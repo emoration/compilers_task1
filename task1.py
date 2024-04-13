@@ -465,8 +465,8 @@ def parse(code: str) -> list:
 # 定义符号表输出函数
 def print_token_list(token_list, path=None):
     """根据对应词素类别来输出，内部隐式使用Token的__str__()函数，可以将whitespace类型转为空字符串(不输出)，error类型可以输出错误信息"""
-    for i in token_list:
-        print(i, end='')
+    # for i in token_list:
+    #     print(i, end='')
     # 输出到文件
     if path:
         with open(f"{path}.out", 'w', encoding='utf-8') as f:
