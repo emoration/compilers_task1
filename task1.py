@@ -511,3 +511,7 @@ if __name__ == '__main__':
         print()
         # 输出颜色渲染后的代码
         show_token_list(tokens)
+        print()
+        print()
+        print()
+        print()
