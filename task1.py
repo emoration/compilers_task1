@@ -336,28 +336,29 @@ def parse(code: str) -> list:
                     (2, r'\.', 13),
                     (3, r'\d', 13),
                     (4, r'[0-7]', 4),
-                    (4, r'[89a-zA-Z_]', 5),
-                    (5, r'\w', 5),
+                    (4, r'[89a-zA-Z_\.]', 5),
+                    (5, r'[\w\.]', 5),
                     (6, r'[01]', 7),
-                    (6, r'[2-9a-zA-Z_]', 8),
+                    (6, r'[2-9a-zA-Z_\.]', 8),
                     (7, r'[01]', 7),
-                    (7, r'[2-9a-zA-Z_]', 8),
-                    (8, r'\w', 8),
+                    (7, r'[2-9a-zA-Z_\.]', 8),
+                    (8, r'[\w\.]', 8),
                     (9, r'[\da-fA-F]', 10),
-                    (9, r'[g-zG-Z_]', 11),
+                    (9, r'[g-zG-Z_\.]', 11),
                     (10, r'[\da-fA-F]', 10),
-                    (10, r'[g-zG-Z_]', 11),
+                    (10, r'[g-zG-Z_\.]', 11),
+                    (11, r'[\w\.]', 11),
                     (12, r'\w', 12),
                     (13, r'\d', 13),
                     (13, r'[eE]', 14),
                     (13, r'[a-df-zA-DF-Z_\.]', 17),
-                    (14, r'[a-zA-Z_]', 17),
+                    (14, r'[a-zA-Z_\.]', 17),
                     (14, r'[\+\-]', 15),
                     (14, r'\d', 16),
-                    (15, r'[A-Za-z_]', 17),
+                    (15, r'[A-Za-z_\.]', 17),
                     (15, r'\d', 16),
                     (16, r'\d', 16),
-                    (16, r'[a-zA-Z_]', 17),
+                    (16, r'[a-zA-Z_\.]', 17),
                     (17, r'[\w\.]', 17)
                 ],
                 start=0,
@@ -397,7 +398,7 @@ def parse(code: str) -> list:
                     (0, r'\>', 5),
                     (0, r'\&', 7),
                     (0, r'\|', 8),
-                    (0, r'\\', 10),  # FIXME modified
+                    (0, r'\\', 10),
                     (1, r'[\+\=]', 9),
                     (2, r'[\-\=\>]', 9),
                     (3, r'\=', 9),
@@ -420,7 +421,7 @@ def parse(code: str) -> list:
                     7: 'operator',
                     8: 'operator',
                     9: 'operator',
-                    10: 'error@不在字符串中的转义字符',  # FIXME modified
+                    10: 'error@不在字符串中的转义字符',
                 }
             )
             token, j = fa.match(code, i, j)
@@ -489,6 +490,8 @@ def show_token_list(token_list):
     """根据词素类别来可视化，将不同类别输出为不同颜色的文本"""
     # 类型颜色对照表输出
     for _type in Token.type_to_name:
+        if _type == "whitespace":
+            continue
         print(Token.type_to_color[_type] + Token.type_to_name[_type] + Style.RESET_ALL, end=' ')
     print()
     print()

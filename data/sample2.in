@@ -17,7 +17,10 @@ int main(){
                     break;
                 k++;
             }
-            if(k==n){  /*Make the values from this position in the a array equal to all the values moved n bits back to play the role of removal*/
+            if(k==n){
+            /*Make the values from this position
+            in the a array equal to all the values moved n bits back
+             to play the role of removal*/
                 m=m-n;
                 for(j=i;j<m;j++){
                     a[j]=a[j+n];
